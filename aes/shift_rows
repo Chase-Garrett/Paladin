@@ -1,13 +1,24 @@
 def shift_rows(state):
+    # Create a new 4x4 matrix filled with zeros
     shifted_state = [[0] * 4 for _ in range(4)]
+
+    # First row remains unchanged
     shifted_state[0] = state[0]
+
+    # Second row shifts to the left by 1 byte
     shifted_state[1] = state[1][1:] + state[1][:1]
+
+    # Third row shifts to the left by 2 bytes
     shifted_state[2] = state[2][2:] + state[2][:2]
+
+    # Fourth row shifts to the left by 3 bytes
     shifted_state[3] = state[3][3:] + state[3][:3]
+
     return shifted_state
 
 # Example usage:
 if __name__ == "__main__":
+    # Example 4x4 state matrix
     state_matrix = [
         [0x32, 0x88, 0x31, 0xe0],
         [0x43, 0x5a, 0x31, 0x37],
@@ -15,12 +26,15 @@ if __name__ == "__main__":
         [0xa8, 0x8d, 0xa2, 0x34]
     ]
 
+    # Apply row shifting to the state matrix
     shifted_matrix = shift_rows(state_matrix)
 
+    # Print the original state matrix
     print("Original State Matrix:")
     for row in state_matrix:
         print(row)
 
+    # Print the state matrix after row shifting
     print("\nState Matrix after Row Shifting:")
     for row in shifted_matrix:
         print(row)
