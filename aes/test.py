@@ -1,0 +1,38 @@
+import unittest
+from mixcol import inv_mix_columns, mix_columns
+
+class TestMixCol(unittest.TestCase):
+
+    def test_mix_col(self):
+        # Test case 1
+        state_matrix = [[0x32, 0x88, 0x31, 0xe0],
+                        [0x43, 0x5a, 0x31, 0x37],
+                        [0xf6, 0x30, 0x98, 0x07],
+                        [0xa8, 0x8d, 0xa2, 0x34]]
+
+        expected_matrix = [[0xe6, 0x8c, 0x33, 0x32],
+                           [0xb4, 0x77, 0xf8, 0x24],
+                           [0x56, 0xfe, 0x8a, 0x7b],
+                           [0x38, 0x74, 0x4f, 0xb0]]
+
+        mix_columns(state_matrix)
+        self.assertEqual(state_matrix, expected_matrix)
+
+    def test_inv_mix_col(self):
+        # Test case 1
+        state_matrix = [[0xe6, 0x8c, 0x33, 0x32],
+                        [0xb4, 0x77, 0xf8, 0x24],
+                        [0x56, 0xfe, 0x8a, 0x7b],
+                        [0x38, 0x74, 0x4f, 0xb0]]
+
+        expected_matrix = [[0x32, 0x88, 0x31, 0xe0],
+                           [0x43, 0x5a, 0x31, 0x37],
+                           [0xf6, 0x30, 0x98, 0x07],
+                           [0xa8, 0x8d, 0xa2, 0x34]]
+
+        inv_mix_columns(state_matrix)
+        self.assertEqual(state_matrix, expected_matrix)
+
+if __name__ == '__main__':
+    unittest.main()
+
