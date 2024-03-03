@@ -133,10 +133,11 @@ def sub_table_dec_lookup(num):
     # print(f"convert from {num} to {hex(swap)}")
     return hex(swap)
 
-
+'''
 Secret = 0xD62948DFA9B4DF52148FCDA234D878FC
 Secret_Enc = byteSub_encrypt(Secret)
 Secret_Decrypt = byteSub_decrypt(Secret_Enc)
 print(f"Passing in the secret message {hex(Secret)}, returns the Encryption {hex(byteSub_encrypt(Secret))}")
 print(f"Passing in the encrypted message {hex(Secret_Enc)}, returns the Decrypted {hex(byteSub_decrypt(Secret_Enc))}")
 print(f"Success = {Secret == Secret_Decrypt}")
+'''
