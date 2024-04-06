@@ -101,7 +101,7 @@ def key_expansion(key: bytes, word: int = 4) -> [[[int]]]:
     for i in range(nk, word * (num_rounds + 1)):
         temp = w[i-1]
         if i % nk == 0:
-            temp = xor(substitute_word(rotate_word), rcon(i // nk))
+            temp = xor(substitute_word(rotate_word(temp)), rcon(i // nk))
         elif nk > 6 and i % nk == 4:
             temp = substitute_word(temp)
         w.append(xor(w[i - nk], temp))
@@ -112,7 +112,7 @@ def key_expansion(key: bytes, word: int = 4) -> [[[int]]]:
 def add_round_key(state: [[int]], key_schedule: [[[int]]], round: int):
     round_key = key_schedule[round]
     for r in range(len(state)):
-        state[r] = [state[r] ^ round_key[r][c] for c in range(len(state[0]))]
+        state[r] = [state[r][c] ^ round_key[r][c] for c in range(len(state[0]))]
 
 
 # The following two functions implement sub_bytes for aes encryption and decryption
@@ -239,7 +239,7 @@ def aes_decryption(cipher_text: bytes, key: bytes) -> bytes:
         inverse_shift_rows(state)
         inverse_sub_bytes(state)
         add_round_key(state, key_schedule, round)
-        inverse_mix_column(state)
+        inverse_mix_columns(state)
 
     inverse_shift_rows(state)
     inverse_sub_bytes(state)
