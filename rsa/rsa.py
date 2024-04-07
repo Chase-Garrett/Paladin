@@ -83,6 +83,7 @@ def rsa_decrypt(cipher_text: bytes, d: int, n: int) -> bytes:
 # p = prime_num_gen(prime_number_bit_length)
 # q = prime_num_gen(prime_number_bit_length)
 # n = p * q
+# e = 65537
 #
 # Private Key
 # d = calculate_private_key(e, p, q)
