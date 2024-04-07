@@ -249,15 +249,23 @@ def aes_decryption(cipher_text: bytes, key: bytes) -> bytes:
     return plain_text
 
 
+# adds padding to messages before encryption
+def pad(data: bytes) -> bytes:
+    padding_length = BLOCK_SIZE - (len(data) % BLOCK_SIZE)
+    padded_data = data + bytes([padding_length] * padding_length)
+    return padded_data
+
+
 # Encryption based on CBC mode of operation for AES
 def cbc_encrypt(plain_text: bytes, key: bytes, iv: bytes) -> bytes:
+    padded_text = pad(plain_text)
     cipher_text = []
-    p_1 = plain_text[:BLOCK_SIZE]
+    p_1 = padded_text[:BLOCK_SIZE]
     c_1 = aes_encryption(xor(p_1, iv), key)
     cipher_text += c_1
     c_i_1 = c_1
-    for i in range(1, len(plain_text) // BLOCK_SIZE):
-        p_i = plain_text[i * BLOCK_SIZE:(i+1) * BLOCK_SIZE]
+    for i in range(1, len(padded_text) // BLOCK_SIZE):
+        p_i = padded_text[i * BLOCK_SIZE:(i+1) * BLOCK_SIZE]
         c_i = aes_encryption(xor(p_i, c_i_1), key)
         cipher_text += c_i
         c_i_1 = c_i
@@ -268,7 +276,6 @@ def cbc_encrypt(plain_text: bytes, key: bytes, iv: bytes) -> bytes:
 # Decryption based on CBC mode of operation for AES
 def cbc_decrypt(cipher_text: bytes, key: bytes, iv: bytes) -> bytes:
     plain_text = []
-
     c_1 = cipher_text[:BLOCK_SIZE]
     o_1 = aes_decryption(c_1, key)
     p_1 = xor(o_1, iv)
