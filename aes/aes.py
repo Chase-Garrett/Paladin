@@ -2,6 +2,8 @@
 
 # AES encryption and decryption schemes as outlined by the NIST specifications
 
+BLOCK_SIZE = 16
+
 # Rijndael S-box
 s_box = [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67,
          0x2b, 0xfe, 0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59,
@@ -222,8 +224,6 @@ def aes_decryption(cipher_text: bytes, key: bytes) -> bytes:
     key_byte_length = len(key)
     key_bit_length = key_byte_length * 8
 
-    nk = key_byte_length // 4
-
     if key_bit_length == 128:
         num_rounds = 10
     elif key_bit_length == 192:
@@ -247,3 +247,46 @@ def aes_decryption(cipher_text: bytes, key: bytes) -> bytes:
     plain_text = bytes_from_state(state)
 
     return plain_text
+
+
+# adds padding to messages before encryption
+def pad(data: bytes) -> bytes:
+    padding_length = BLOCK_SIZE - (len(data) % BLOCK_SIZE)
+    padded_data = data + bytes([padding_length] * padding_length)
+    return padded_data
+
+
+# Encryption based on CBC mode of operation for AES
+def cbc_encrypt(plain_text: bytes, key: bytes, iv: bytes) -> bytes:
+    padded_text = pad(plain_text)
+    cipher_text = []
+    p_1 = padded_text[:BLOCK_SIZE]
+    c_1 = aes_encryption(xor(p_1, iv), key)
+    cipher_text += c_1
+    c_i_1 = c_1
+    for i in range(1, len(padded_text) // BLOCK_SIZE):
+        p_i = padded_text[i * BLOCK_SIZE:(i+1) * BLOCK_SIZE]
+        c_i = aes_encryption(xor(p_i, c_i_1), key)
+        cipher_text += c_i
+        c_i_1 = c_i
+
+    return bytes(cipher_text)
+
+
+# Decryption based on CBC mode of operation for AES
+def cbc_decrypt(cipher_text: bytes, key: bytes, iv: bytes) -> bytes:
+    plain_text = []
+    c_1 = cipher_text[:BLOCK_SIZE]
+    o_1 = aes_decryption(c_1, key)
+    p_1 = xor(o_1, iv)
+    plain_text += p_1
+
+    c_i_1 = c_1
+    for i in range(1, len(cipher_text) // BLOCK_SIZE):
+        c_i = cipher_text[i * BLOCK_SIZE:(i+1) * BLOCK_SIZE]
+        o_i = aes_decryption(c_i, key)
+        p_i = xor(o_i, c_i_1)
+        plain_text += p_i
+        c_i_1 = c_i
+
+    return bytes(plain_text)
