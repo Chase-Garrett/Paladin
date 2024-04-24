@@ -1,0 +1,37 @@
+def inverse_shift_rows(state):
+    """Perform the Inverse Shift Rows step for AES decryption.
+    
+    Args:
+        state (list of lists): 4x4 matrix representing the AES state.
+
+    Returns:
+        list of lists: The state after applying the Inverse Shift Rows.
+    """
+    # The state should be a 4x4 matrix where state[row][col] is an element
+    new_state = [list(row) for row in state]  # Create a copy of the state
+
+    # Shift the second row to the right by 1
+    new_state[1] = new_state[1][-1:] + new_state[1][:-1]
+    
+    # Shift the third row to the right by 2
+    new_state[2] = new_state[2][-2:] + new_state[2][:-2]
+    
+    # Shift the fourth row to the right by 3
+    new_state[3] = new_state[3][-3:] + new_state[3][:-3]
+    
+    return new_state
+
+# Example usage:
+initial_state = [
+    [0x00, 0x01, 0x02, 0x03],
+    [0x10, 0x11, 0x12, 0x13],
+    [0x20, 0x21, 0x22, 0x23],
+    [0x30, 0x31, 0x32, 0x33]
+]
+
+# Apply the Inverse Shift Rows
+new_state = inverse_shift_rows(initial_state)
+
+# Output the new state
+for row in new_state:
+    print(' '.join(format(x, '02x') for x in row))
