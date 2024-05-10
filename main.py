@@ -19,18 +19,21 @@ root.title("Paladin")
 # set dimension
 root.geometry("1280x1000")
 
+# set label and text box for plain text
 plain_txt_lbl = Label(root, text = "Plain text")
 plain_txt_lbl.grid(column = 1, row = 0)
 
 plain_txt_box = Text(root, width = 50, height = 25)
 plain_txt_box.grid(column = 1, row = 1)
 
+# set label and text box for cipher text
 cipher_txt_lbl = Label(root, text = "Cipher text")
 cipher_txt_lbl.grid(column = 1, row = 2)
 
 cipher_txt_box = Text(root, width = 50, height = 25)
 cipher_txt_box.grid(column = 1, row = 3)
 
+# set label and text box for encrypted AES key
 key_lbl = Label(root, text = "Encrypted AES key")
 key_lbl.grid(column = 2, row = 1)
 
@@ -67,7 +70,7 @@ def aes_256_click():
 
 def aes_192_click():
     global d, n, iv
-    # generate AES-256 key
+    # generate AES-192 key
     aes_key = os.urandom(192 // 8)
 
     # generate 128 initial vector for CBC
@@ -93,7 +96,7 @@ def aes_192_click():
 
 def aes_128_click():
     global d, n, iv
-    # generate AES-256 key
+    # generate AES-128 key
     aes_key = os.urandom(128 // 8)
 
     # generate 128 initial vector for CBC
